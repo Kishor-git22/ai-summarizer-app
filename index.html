@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- character Set -->
+    <meta charset="utf-8" />
+
+    <!-- viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- theme -->
+    <meta name="theme-color" content="#FFFFFF" />
+
+    <!-- description -->
+    <meta name="description" content="Modern OpenAI GPT-4 Article Summarizer" />
+
+    <!-- keywords -->
+    <meta
+      name="keywords"
+      content="html, css, react, reactjs, ai, chatgpt, gpt, gpt-4, article summarizer, modern, modern-ui, modern-ux tailwindcss, javascript, js, typescript, ts"
+    />
+
+    <!-- author -->
+    <meta name="author" content="Shankara Perumal Arunachalam" />
+
+    <!-- icon -->
+    <link rel="icon" type="image/x-icon" href="/summary.svg" />
+
+    <!-- generics -->
+    <link
+      rel="preconnect icon"
+      type="image/png"
+      href="/summary.svg"
+      sizes="16x16"
+    />
+    <link
+      rel="preconnect icon"
+      type="image/png"
+      href="/summary.svg"
+      sizes="32x32"
+    />
+
+    <!-- android -->
+    <link
+      rel="preconnect shortcut icon"
+      type="image/png"
+      href="/summary.svg"
+      sizes="192x192"
+    />
+    <link
+      rel="preconnect shortcut icon"
+      type="image/png"
+      href="/summary.svg"
+      sizes="512x512"
+    />
+
+    <!-- ios -->
+    <link
+      rel="preconnect apple-touch-icon"
+      type="image/png"
+      href="/summary.svg"
+      sizes="180x180"
+    />
+    <link
+      rel="preconnect mask-icon"
+      href="/summary.svg"
+      color="#F97316"
+    />
+
+    <!-- windows 8 ie 10-->
+    <meta name="msapplication-TileColor" content="#F97316" />
+    <meta
+      name="msapplication-TileImage"
+      content="/android-chrome-192x192.png"
+    />
+
+    <!-- windows 8.1 + ie11 and above -->
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+
+    <!-- manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- title -->
+    <title>Summarizer</title>
+
+    <!-- satoshi font family -->
+    <link
+      rel="preconnect"
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@1,900,700,500,300,400&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+
+    <!-- inter font family -->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+  </head>
+  <body>
+    <!-- root -->
+    <div id="root"></div>
+
+    <!-- javascript Not Enabled -->
+    <noscript
+      >Enable JavaScript to run this App or try an up-to-date browser.</noscript
+    >
+ <style>
+  #particles-left,
+        #particles-right {
+            position: fixed;
+            top: 0;
+            width: 200px; /* Width of particle strip */
+            height: 100vh;
+            pointer-events: none; /* Allow clicks through */
+            z-index: 0; /* Set to 0 so it's above the background but below content */
+        }
+        #particles-left { left: 0; }
+        #particles-right { right: 0; }
+@media (max-width: 768px) {
+    #particles-left,
+    #particles-right {
+        width: 50px; /* Reduced width for mobile */
+    }
+}
+
+</style>
+<!-- Load particles.js from CDN -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<script>
+const config = {
+  "particles": {
+    "number": {
+      "value": 300, // Changed from 60 to 120
+      "density": { "enable": true, "value_area": 600 }
+    },
+    "color": { "value": "#ffffff" },
+    "shape": { "type": "circle" },
+    "opacity": { "value": 0.5 },
+    "size": { "value": 3, "random": true },
+    "line_linked": {
+      "enable": true,
+      "distance": 120,
+      "color": "#ffffff",
+      "opacity": 0.3,
+      "width": 1
+    },
+    "move": {
+      "enable": true,
+      "speed": 3,
+      "random": true,
+      "out_mode": "out"
+    }
+  },
+  "interactivity": {
+    "events": {
+      "onhover": { "enable": true, "mode": "repulse" },
+      "onclick": { "enable": true, "mode": "push" },
+      "resize": true
+    },
+    "modes": {
+      "repulse": { "distance": 100, "duration": 0.4 },
+      "push": { "particles_nb": 2 }
+    }
+  },
+  "retina_detect": true
+};
+
+particlesJS("particles-left", config);
+particlesJS("particles-right", config);
+</script>
+
+    <!-- javaScript -->
+    <script type="module" src="/src/main.jsx" async></script>
+  </body>
+</html>
