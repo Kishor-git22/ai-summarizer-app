@@ -33,7 +33,7 @@ export default [
       }
     },
     plugins: {
-      'react': reactPlugin,
+      react: reactPlugin,
       'react-hooks': reactHooksPlugin,
       'react-refresh': reactRefreshPlugin,
       '@typescript-eslint': tsPlugin
