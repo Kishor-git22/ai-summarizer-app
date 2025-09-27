@@ -61,7 +61,7 @@ const Demo = () => {
     const newArticle = { ...article, summary: data.summary }
 
     // update old articles
-    let updatedAllArticles = [newArticle, ...allArticles]
+    const updatedAllArticles = [newArticle, ...allArticles]
 
     // set new article
     setArticle(newArticle)
