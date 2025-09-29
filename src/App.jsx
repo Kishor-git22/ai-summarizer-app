@@ -1,16 +1,15 @@
-import { ToastContainer } from "react-toastify";
+import { ToastContainer } from 'react-toastify'
 
-import Hero from "./components/Hero";
-import Demo from "./components/Demo";
+import Hero from './components/Hero'
+import Demo from './components/Demo'
 
 // styles
-import "./App.css";
+import './App.css'
 
 // app
 const App = () => {
   return (
     <main>
-      
       {/* main */}
       <div className="main">
         <div className="gradient" />
@@ -39,7 +38,7 @@ const App = () => {
         />
       </aside>
     </main>
-  );
-};
+  )
+}
 
-export default App;
+export default App

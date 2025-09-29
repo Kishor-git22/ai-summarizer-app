@@ -1,12 +1,12 @@
-import { logo } from "../assets";
+import { logo } from '../assets'
 import {
   PROJECT_NAME,
   PROJECT_GITHUB_LINK,
   HERO_TITLE_LEFT,
   HERO_TITLE_RIGHT,
   HERO_SUBTITLE_LEFT,
-  HERO_SUBTITLE_RIGHT,
-} from "../constants";
+  HERO_SUBTITLE_RIGHT
+} from '../constants'
 
 // hero
 const Hero = () => {
@@ -27,11 +27,10 @@ const Hero = () => {
         {/* GitHub Button */}
         <button
           type="button"
-          onClick={() => window.open(PROJECT_GITHUB_LINK, "_blank")}
+          onClick={() => window.open(PROJECT_GITHUB_LINK, '_blank')}
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-black text-white hover:bg-gray-900 transition-all text-sm sm:text-base"
           title="View Source Code"
         >
-          
           <span className="hidden sm:inline">Github</span>
         </button>
       </nav>
@@ -39,8 +38,7 @@ const Hero = () => {
       {/* Title */}
       <div className="text-center max-w-4xl">
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900">
-          {HERO_TITLE_LEFT}{" "}
-          <br className="hidden md:block" />
+          {HERO_TITLE_LEFT} <br className="hidden md:block" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-500">
             {HERO_TITLE_RIGHT}
           </span>
@@ -48,8 +46,7 @@ const Hero = () => {
 
         {/* Subtitle */}
         <h2 className="mt-4 text-base sm:text-lg lg:text-xl text-black leading-relaxed">
-          {HERO_SUBTITLE_LEFT}{" "} 
-          <br/>
+          {HERO_SUBTITLE_LEFT} <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-red-500 font-semibold">
             {PROJECT_NAME}
           </span>
@@ -57,7 +54,7 @@ const Hero = () => {
         </h2>
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Hero;
+export default Hero
