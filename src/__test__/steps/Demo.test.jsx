@@ -10,21 +10,21 @@ import { LOCALSTORAGE_ARTICLES_KEY } from '../../constants'
 beforeAll(() => {
   // Mock clipboard API with proper permission
   const mockClipboard = {
-    writeText: vi.fn().mockImplementation((text) => {
-      console.log('Clipboard writeText called with:', text);
-      return Promise.resolve();
+    writeText: vi.fn().mockImplementation(text => {
+      console.log('Clipboard writeText called with:', text)
+      return Promise.resolve()
     }),
     readText: vi.fn().mockResolvedValue('')
-  };
-  
+  }
+
   Object.defineProperty(navigator, 'clipboard', {
     value: mockClipboard,
     writable: true,
     configurable: true
-  });
-  
+  })
+
   // Make sure the clipboard is available in the global scope
-  global.navigator.clipboard = mockClipboard;
+  global.navigator.clipboard = mockClipboard
 })
 
 // Mock the API service
@@ -256,22 +256,20 @@ describe('Demo Component', () => {
   })
 
   describe('Copying an article URL to clipboard', () => {
-    const mockArticles = [
-      { url: 'https://example.com/1', summary: 'First article summary' }
-    ]
-  
+    const mockArticles = [{ url: 'https://example.com/1', summary: 'First article summary' }]
+
     beforeEach(() => {
       // Mock localStorage
       window.localStorage.setItem(LOCALSTORAGE_ARTICLES_KEY, JSON.stringify(mockArticles))
-      
+
       // Mock clipboard
       vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue()
     })
-  
+
     afterEach(() => {
       vi.restoreAllMocks()
     })
-  
+
     test('copies article URL to clipboard and shows confirmation', async () => {
       // Setup test
       const { useLazyGetSummaryQuery } = await import('../../services/article')
@@ -297,17 +295,17 @@ describe('Demo Component', () => {
 
       // Wait for the UI to update after the state change
       const tickIcon = await screen.findByRole('img', { name: 'Copied' })
-      
+
       // Verify UI shows copied state
       expect(tickIcon).toBeInTheDocument()
-      
+
       // Get the image element inside the button
       const imgElement = copyButton.querySelector('img')
-      
+
       // Verify the image has the correct attributes
       expect(imgElement).toHaveAttribute('src', expect.stringContaining('tick'))
       expect(imgElement).toHaveAttribute('alt', 'Copied')
       expect(imgElement).toHaveAttribute('title', 'Copied')
     })
   })
-});
+})
