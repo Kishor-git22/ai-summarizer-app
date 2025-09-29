@@ -10,10 +10,7 @@ import { LOCALSTORAGE_ARTICLES_KEY } from '../../constants'
 beforeAll(() => {
   // Mock clipboard API with proper permission
   const mockClipboard = {
-    writeText: vi.fn().mockImplementation(text => {
-      console.log('Clipboard writeText called with:', text)
-      return Promise.resolve()
-    }),
+    writeText: vi.fn().mockResolvedValue(undefined),
     readText: vi.fn().mockResolvedValue('')
   }
 
