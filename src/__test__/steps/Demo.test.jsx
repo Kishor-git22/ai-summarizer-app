@@ -147,8 +147,8 @@ describe('Demo Component', () => {
 
       const { useLazyGetSummaryQuery } = await import('../../services/article')
 
-      // Async mock returning data object
-      const mockGetSummary = vi.fn(async () => ({ data: { summary: 'This is a test summary.' } }))
+      // Mock returning data object
+      const mockGetSummary = vi.fn(() => ({ data: { summary: 'This is a test summary.' } }))
       useLazyGetSummaryQuery.mockReturnValue([
         mockGetSummary,
         { isFetching: false, data: null, error: null }
