@@ -9,7 +9,7 @@ Feature: Article Summarization
     And I click the submit button
     Then I should see an error message about invalid URL
     And no API call should be made
-    
+
   Scenario: Submitting a valid URL
     Given the API is available
     When I enter "https://example.com/article" in the input field
@@ -20,3 +20,9 @@ Feature: Article Summarization
     Then I should see the article summary
     And I should see a success message
     And the article should be added to my history
+
+  Scenario: Viewing article history
+    Given I have previously summarized articles
+    When I view the history section
+    Then I should see my previously summarized articles
+    And each article should show its URL

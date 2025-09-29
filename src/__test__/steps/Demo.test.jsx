@@ -176,4 +176,61 @@ describe('Demo Component', () => {
       expect(history.some(item => item.url === 'https://example.com/article')).toBe(true)
     })
   })
+
+  describe('Viewing article history', () => {
+    const mockArticles = [
+      { url: 'https://example.com/1', summary: 'First article summary' },
+      { url: 'https://example.com/2', summary: 'Second article summary' }
+    ]
+
+    beforeEach(() => {
+      // Mock localStorage with some articles
+      window.localStorage.setItem(LOCALSTORAGE_ARTICLES_KEY, JSON.stringify(mockArticles))
+    })
+
+    test('displays previously summarized articles with their URLs', async () => {
+      // Mock the API to not be fetching
+      const { useLazyGetSummaryQuery } = await import('../../services/article')
+      useLazyGetSummaryQuery.mockReturnValue([
+        vi.fn(),
+        { isFetching: false, data: null, error: null }
+      ])
+
+      render(<Demo />)
+
+      // Wait for the component to load and render
+      await screen.findByText(mockArticles[0].url)
+
+      // Check that all articles are displayed
+      mockArticles.forEach(article => {
+        const articleElement = screen.getByText(article.url)
+        expect(articleElement).toBeInTheDocument()
+        expect(articleElement).toHaveClass('text-blue-500')
+        expect(articleElement).toHaveAttribute('title', article.url)
+        expect(articleElement.closest('.link_card')).toBeInTheDocument()
+      })
+
+      // Check that the copy button exists for each article
+      const copyButtons = screen.getAllByRole('button', { name: /copy to clipboard/i })
+      expect(copyButtons).toHaveLength(mockArticles.length)
+    })
+
+    test('clicking on an article loads its summary', async () => {
+      const { useLazyGetSummaryQuery } = await import('../../services/article')
+      useLazyGetSummaryQuery.mockReturnValue([
+        vi.fn(),
+        { isFetching: false, data: null, error: null }
+      ])
+
+      render(<Demo />)
+      const user = userEvent.setup()
+
+      // Find and click the first article
+      const firstArticle = await screen.findByText(mockArticles[0].url)
+      await user.click(firstArticle)
+
+      // Verify the article's summary is displayed
+      expect(screen.getByText(mockArticles[0].summary)).toBeInTheDocument()
+    })
+  })
 })
