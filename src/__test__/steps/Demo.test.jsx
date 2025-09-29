@@ -13,9 +13,9 @@ vi.mock('../../services/article', () => ({
     {
       data: null,
       isFetching: false,
-      error: null,
-    },
-  ]),
+      error: null
+    }
+  ])
 }))
 
 // Mock react-toastify
@@ -25,16 +25,16 @@ vi.mock('react-toastify', () => ({
     success: vi.fn(),
     info: vi.fn(),
     warn: vi.fn(),
-    dismiss: vi.fn(),
+    dismiss: vi.fn()
   },
-  ToastContainer: vi.fn(() => null),
+  ToastContainer: vi.fn(() => null)
 }))
 
 // Mock next/head
 vi.mock('next/head', () => {
   return {
     __esModule: true,
-    default: ({ children }) => <>{children}</>,
+    default: ({ children }) => <>{children}</>
   }
 })
 
@@ -50,8 +50,8 @@ beforeEach(() => {
       removeListener: vi.fn(),
       addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    })),
+      dispatchEvent: vi.fn()
+    }))
   })
 
   // Mock window.scrollTo
@@ -70,12 +70,12 @@ beforeEach(() => {
       }),
       clear: vi.fn(() => {
         store = {}
-      }),
+      })
     }
   })()
 
   Object.defineProperty(window, 'localStorage', {
-    value: localStorageMock,
+    value: localStorageMock
   })
 })
 
@@ -144,34 +144,36 @@ describe('Demo Component', () => {
       const { toast } = await import('react-toastify')
       const mockToastSuccess = vi.fn()
       toast.success = mockToastSuccess
-    
+
       const { useLazyGetSummaryQuery } = await import('../../services/article')
-      
+
       // Async mock returning data object
       const mockGetSummary = vi.fn(async () => ({ data: { summary: 'This is a test summary.' } }))
-      useLazyGetSummaryQuery.mockReturnValue([mockGetSummary, { isFetching: false, data: null, error: null }])
-    
+      useLazyGetSummaryQuery.mockReturnValue([
+        mockGetSummary,
+        { isFetching: false, data: null, error: null }
+      ])
+
       render(<Demo />)
       const input = screen.getByPlaceholderText(/Paste the Article Link/i)
       const button = screen.getByRole('button', { name: /summarize article/i })
       const user = userEvent.setup()
-    
+
       await user.type(input, 'https://example.com/article')
       await user.click(button)
-    
+
       // Verify API call
       expect(mockGetSummary).toHaveBeenCalledWith({ articleUrl: 'https://example.com/article' })
-    
+
       // Verify summary appears
       expect(await screen.findByText(/This is a test summary./i)).toBeInTheDocument()
-    
+
       // Verify toast
       expect(mockToastSuccess).toHaveBeenCalledWith('Article Summarized')
-    
+
       // Verify localStorage
       const history = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_ARTICLES_KEY) || '[]')
       expect(history.some(item => item.url === 'https://example.com/article')).toBe(true)
     })
-    
   })
 })
