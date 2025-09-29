@@ -32,3 +32,9 @@ Feature: Article Summarization
     When I click the copy button for an article
     Then the article URL should be copied to clipboard
     And I should see a confirmation that the URL was copied
+
+  Scenario: Clicking on a history item
+    Given I have previously summarized articles
+    When I click on an article in history
+    Then the article summary should be displayed
+    And the input field should be updated with the article URL

@@ -194,7 +194,6 @@ describe('Demo Component', () => {
       expect(history.some(item => item.url === 'https://example.com/article')).toBe(true)
     })
   })
-
   describe('Viewing article history', () => {
     const mockArticles = [
       { url: 'https://example.com/1', summary: 'First article summary' },
@@ -251,7 +250,6 @@ describe('Demo Component', () => {
       expect(screen.getByText(mockArticles[0].summary)).toBeInTheDocument()
     })
   })
-
   describe('Copying an article URL to clipboard', () => {
     const mockArticles = [{ url: 'https://example.com/1', summary: 'First article summary' }]
 
@@ -303,6 +301,50 @@ describe('Demo Component', () => {
       expect(imgElement).toHaveAttribute('src', expect.stringContaining('tick'))
       expect(imgElement).toHaveAttribute('alt', 'Copied')
       expect(imgElement).toHaveAttribute('title', 'Copied')
+    })
+  })
+  describe('Clicking on a history item', () => {
+    const mockArticles = [
+      { url: 'https://example.com/1', summary: 'First article summary' },
+      { url: 'https://example.com/2', summary: 'Second article summary' }
+    ]
+
+    beforeEach(() => {
+      // Mock localStorage with previously summarized articles
+      window.localStorage.setItem(LOCALSTORAGE_ARTICLES_KEY, JSON.stringify(mockArticles))
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+      window.localStorage.clear()
+    })
+
+    test('loads article summary and updates input field when clicking history item', async () => {
+      // Setup test
+      const { useLazyGetSummaryQuery } = await import('../../services/article')
+      useLazyGetSummaryQuery.mockReturnValue([
+        vi.fn(),
+        { isFetching: false, data: null, error: null }
+      ])
+
+      // Render the component
+      render(<Demo />)
+      const user = userEvent.setup()
+
+      // Wait for articles to render
+      await screen.findByText(mockArticles[0].url)
+      await screen.findByText(mockArticles[1].url)
+
+      // Click on the first article
+      const articleElement = screen.getByText(mockArticles[0].url)
+      await user.click(articleElement)
+
+      // Verify the summary is displayed
+      expect(screen.getByText(mockArticles[0].summary)).toBeInTheDocument()
+
+      // Verify the input field is updated with the article URL
+      const inputField = screen.getByPlaceholderText(/Paste the Article Link/i)
+      expect(inputField).toHaveValue(mockArticles[0].url)
     })
   })
 })
