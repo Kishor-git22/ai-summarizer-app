@@ -7,15 +7,10 @@ module.exports = {
     '^react-toastify/dist/ReactToastify.css$': '<rootDir>/__mocks__/styleMock.js'
   },
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
+    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest'
   },
-  testMatch: [
-    '**/__test__/**/*.test.[jt]s?(x)',
-    '**/?(*.)+(spec|test).[jt]s?(x)'
-  ],
-  testPathIgnorePatterns: [
-    '/node_modules/'
-  ],
+  testMatch: ['**/__test__/**/*.test.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+  testPathIgnorePatterns: ['/node_modules/'],
   collectCoverage: true,
   coverageDirectory: 'coverage',
   collectCoverageFrom: [
@@ -27,4 +22,4 @@ module.exports = {
   ],
   coverageReporters: ['text', 'lcov'],
   verbose: true
-};
+}
