@@ -1,10 +1,31 @@
-import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, test, expect, vi, beforeEach, afterEach, beforeAll } from 'vitest'
 import React from 'react'
 import { render, screen, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import Demo from '../../components/Demo'
 import { LOCALSTORAGE_ARTICLES_KEY } from '../../constants'
+
+// Mock the clipboard API globally
+beforeAll(() => {
+  // Mock clipboard API with proper permission
+  const mockClipboard = {
+    writeText: vi.fn().mockImplementation((text) => {
+      console.log('Clipboard writeText called with:', text);
+      return Promise.resolve();
+    }),
+    readText: vi.fn().mockResolvedValue('')
+  };
+  
+  Object.defineProperty(navigator, 'clipboard', {
+    value: mockClipboard,
+    writable: true,
+    configurable: true
+  });
+  
+  // Make sure the clipboard is available in the global scope
+  global.navigator.clipboard = mockClipboard;
+})
 
 // Mock the API service
 vi.mock('../../services/article', () => ({
@@ -233,4 +254,60 @@ describe('Demo Component', () => {
       expect(screen.getByText(mockArticles[0].summary)).toBeInTheDocument()
     })
   })
-})
+
+  describe('Copying an article URL to clipboard', () => {
+    const mockArticles = [
+      { url: 'https://example.com/1', summary: 'First article summary' }
+    ]
+  
+    beforeEach(() => {
+      // Mock localStorage
+      window.localStorage.setItem(LOCALSTORAGE_ARTICLES_KEY, JSON.stringify(mockArticles))
+      
+      // Mock clipboard
+      vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue()
+    })
+  
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+  
+    test('copies article URL to clipboard and shows confirmation', async () => {
+      // Setup test
+      const { useLazyGetSummaryQuery } = await import('../../services/article')
+      useLazyGetSummaryQuery.mockReturnValue([
+        vi.fn(),
+        { isFetching: false, data: null, error: null }
+      ])
+
+      render(<Demo />)
+      const user = userEvent.setup()
+
+      // Wait for and find the article
+      const articleElement = await screen.findByText(mockArticles[0].url)
+      const articleCard = articleElement.closest('.link_card')
+      const copyButton = articleCard.querySelector('.copy_btn')
+      expect(copyButton).toBeInTheDocument()
+
+      // Click the copy button
+      await user.click(copyButton)
+
+      // Verify clipboard was called with the correct URL
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(mockArticles[0].url)
+
+      // Wait for the UI to update after the state change
+      const tickIcon = await screen.findByRole('img', { name: 'Copied' })
+      
+      // Verify UI shows copied state
+      expect(tickIcon).toBeInTheDocument()
+      
+      // Get the image element inside the button
+      const imgElement = copyButton.querySelector('img')
+      
+      // Verify the image has the correct attributes
+      expect(imgElement).toHaveAttribute('src', expect.stringContaining('tick'))
+      expect(imgElement).toHaveAttribute('alt', 'Copied')
+      expect(imgElement).toHaveAttribute('title', 'Copied')
+    })
+  })
+});
