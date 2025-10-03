@@ -1,8 +1,25 @@
-import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, test, expect, vi, beforeEach, afterEach, beforeAll } from 'vitest'
 import React from 'react'
-import { render, screen, cleanup } from '@testing-library/react'
+import { render, screen, cleanup, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
+import { toast } from 'react-toastify'
 import Demo from '../../components/Demo'
+import { LOCALSTORAGE_ARTICLES_KEY } from '../../constants'
+
+// Mock the clipboard API globally
+beforeAll(() => {
+  const mockClipboard = {
+    writeText: vi.fn().mockResolvedValue(undefined),
+    readText: vi.fn().mockResolvedValue('')
+  }
+
+  Object.defineProperty(navigator, 'clipboard', {
+    value: mockClipboard,
+    writable: true,
+    configurable: true
+  })
+})
 
 // Mock the API service
 vi.mock('../../services/article', () => ({
@@ -28,14 +45,6 @@ vi.mock('react-toastify', () => ({
   ToastContainer: vi.fn(() => null)
 }))
 
-// Mock next/head
-vi.mock('next/head', () => {
-  return {
-    __esModule: true,
-    default: ({ children }) => <>{children}</>
-  }
-})
-
 // Set up mocks before each test
 beforeEach(() => {
   // Mock window.matchMedia
@@ -56,57 +65,168 @@ beforeEach(() => {
   // Mock window.scrollTo
   window.scrollTo = vi.fn()
 
-  // Mock localStorage
-  const localStorageMock = (() => {
-    let store = {}
-    return {
-      getItem: vi.fn(key => store[key] || null),
-      setItem: vi.fn((key, value) => {
-        store[key] = value.toString()
-      }),
-      removeItem: vi.fn(key => {
-        delete store[key]
-      }),
-      clear: vi.fn(() => {
-        store = {}
-      })
-    }
-  })()
-
-  Object.defineProperty(window, 'localStorage', {
-    value: localStorageMock
-  })
+  // Clear localStorage before each test
+  window.localStorage.clear()
 })
 
 // Clean up after each test
 afterEach(() => {
   vi.clearAllMocks()
   cleanup()
-
-  if (window.localStorage) {
-    window.localStorage.clear()
-  }
-
   document.body.innerHTML = ''
   document.head.innerHTML = ''
 })
 
+// Helper function
+const setup = () => {
+  render(<Demo />)
+  const user = userEvent.setup()
+  const input = screen.getByPlaceholderText(/Paste the Article Link/i)
+  const button = screen.getByRole('button', { name: /summarize article/i })
+  return { user, input, button }
+}
+
 describe('Demo Component', () => {
   describe('Viewing the initial page', () => {
     test('renders the input field with correct placeholder', () => {
-      render(<Demo />)
-
-      const inputElement = screen.getByPlaceholderText(/Paste the Article Link/i)
-      expect(inputElement).toBeInTheDocument()
-      expect(inputElement).toHaveAttribute('type', 'url')
+      const { input } = setup()
+      expect(input).toBeInTheDocument()
+      expect(input).toHaveAttribute('type', 'url')
     })
 
     test('renders the submit button with correct title', () => {
-      render(<Demo />)
+      const { button } = setup()
+      expect(button).toBeInTheDocument()
+      expect(button).toHaveAttribute('title', 'Summarize Article')
+    })
+  })
 
-      const buttonElement = screen.getByRole('button', { name: /summarize article/i })
-      expect(buttonElement).toBeInTheDocument()
-      expect(buttonElement).toHaveAttribute('title', 'Summarize Article')
+  describe('Submitting an invalid URL', () => {
+    test('shows error message and does not make API call', async () => {
+      const mockToastError = vi.fn()
+      toast.error = mockToastError
+
+      const mockGetSummary = vi.fn()
+      const { useLazyGetSummaryQuery } = await import('../../services/article')
+      useLazyGetSummaryQuery.mockReturnValue([mockGetSummary, { isFetching: false }])
+
+      const { user, input, button } = setup()
+
+      await user.type(input, 'not-a-valid-url')
+      await user.click(button)
+
+      expect(mockToastError).toHaveBeenCalledWith('Invalid URL')
+      expect(mockGetSummary).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('Submitting a valid URL', () => {
+    test('calls API, shows summary and toast', async () => {
+      const mockToastSuccess = vi.fn()
+      toast.success = mockToastSuccess
+
+      const { useLazyGetSummaryQuery } = await import('../../services/article')
+      const mockGetSummary = vi
+        .fn()
+        .mockResolvedValue({ data: { summary: 'This is a test summary.' } })
+      useLazyGetSummaryQuery.mockReturnValue([
+        mockGetSummary,
+        { isFetching: false, data: { summary: 'This is a test summary.' }, error: null }
+      ])
+
+      const { user, input, button } = setup()
+
+      await user.type(input, 'https://example.com/article')
+      await user.click(button)
+
+      expect(mockGetSummary).toHaveBeenCalledWith({ articleUrl: 'https://example.com/article' })
+      expect(await screen.findByText(/This is a test summary./i)).toBeInTheDocument()
+      expect(mockToastSuccess).toHaveBeenCalledWith('Article Summarized')
+
+      const history = JSON.parse(window.localStorage.getItem(LOCALSTORAGE_ARTICLES_KEY) || '[]')
+      expect(history.some(item => item.url === 'https://example.com/article')).toBe(true)
+    })
+  })
+
+  describe('Viewing article history', () => {
+    const mockArticles = [
+      { url: 'https://example.com/1', summary: 'First article summary' },
+      { url: 'https://example.com/2', summary: 'Second article summary' }
+    ]
+
+    beforeEach(() => {
+      window.localStorage.setItem(LOCALSTORAGE_ARTICLES_KEY, JSON.stringify(mockArticles))
+    })
+
+    test('displays history items with copy buttons', async () => {
+      const { useLazyGetSummaryQuery } = await import('../../services/article')
+      useLazyGetSummaryQuery.mockReturnValue([
+        vi.fn(),
+        { isFetching: false, data: null, error: null }
+      ])
+
+      render(<Demo />)
+      await screen.findByText(mockArticles[0].url)
+
+      mockArticles.forEach(article => {
+        const articleElement = screen.getByText(article.url)
+        expect(articleElement).toBeInTheDocument()
+        expect(articleElement).toHaveClass('text-blue-500')
+        expect(articleElement).toHaveAttribute('title', article.url)
+      })
+
+      const copyButtons = screen.getAllByRole('button', { name: /copy to clipboard/i })
+      expect(copyButtons).toHaveLength(mockArticles.length)
+    })
+
+    test('clicking on an article loads its summary', async () => {
+      const { useLazyGetSummaryQuery } = await import('../../services/article')
+      useLazyGetSummaryQuery.mockReturnValue([
+        vi.fn(),
+        { isFetching: false, data: null, error: null }
+      ])
+
+      render(<Demo />)
+      const user = userEvent.setup()
+
+      const firstArticle = await screen.findByText(mockArticles[0].url)
+      await user.click(firstArticle)
+      expect(screen.getByText(mockArticles[0].summary)).toBeInTheDocument()
+    })
+  })
+
+  describe('Copying an article URL', () => {
+    const mockArticles = [{ url: 'https://example.com/1', summary: 'First article summary' }]
+
+    beforeEach(() => {
+      window.localStorage.setItem(LOCALSTORAGE_ARTICLES_KEY, JSON.stringify(mockArticles))
+      vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue()
+    })
+
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    test('copies article URL and updates UI', async () => {
+      const { useLazyGetSummaryQuery } = await import('../../services/article')
+      useLazyGetSummaryQuery.mockReturnValue([
+        vi.fn(),
+        { isFetching: false, data: null, error: null }
+      ])
+
+      render(<Demo />)
+      const user = userEvent.setup()
+
+      const articleElement = await screen.findByText(mockArticles[0].url)
+      const articleCard = articleElement.closest('.link_card')
+      const copyButton = articleCard.querySelector('.copy_btn')
+      expect(copyButton).toBeInTheDocument()
+
+      await user.click(copyButton)
+
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(mockArticles[0].url)
+      const tickIcon = await screen.findByRole('img', { name: 'Copied' })
+      expect(tickIcon).toBeInTheDocument()
     })
   })
 })
