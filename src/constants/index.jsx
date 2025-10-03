@@ -1,6 +1,6 @@
 // Project Info
-const PROJECT_NAME = 'Summarizer'
-const PROJECT_GITHUB_LINK = 'https://github.com/ShankaraPerumalArunachalam/summarizer'
+const PROJECT_NAME = 'AI Summarizer'
+const PROJECT_GITHUB_LINK = 'https://github.com/Kishor-git22/ai-summarizer-app'
 
 // Hero Section
 const HERO_TITLE_LEFT = 'Summarize your Article with our Summarizer'
