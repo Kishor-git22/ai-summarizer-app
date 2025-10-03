@@ -1,5 +1,5 @@
 // Project Info
-const PROJECT_NAME = 'Summarizer'
+const PROJECT_NAME = 'AI Summarizer'
 const PROJECT_GITHUB_LINK = 'https://github.com/Kishor-git22/ai-summarizer-app'
 
 // Hero Section
