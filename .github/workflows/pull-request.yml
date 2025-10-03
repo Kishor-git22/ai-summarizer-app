@@ -53,8 +53,11 @@ jobs:
       - name: Build the project
         run: npm run build
 
-    # Run test suite using Jest and Cucumber
+    # Run test suite
       - name: Run tests
         run: npm test
 
+      # Run test coverage
+      - name: Run test coverage
+        run: npm run test:coverage
 
