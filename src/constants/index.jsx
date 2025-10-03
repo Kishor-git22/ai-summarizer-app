@@ -3,7 +3,7 @@ const PROJECT_NAME = 'AI Summarizer'
 const PROJECT_GITHUB_LINK = 'https://github.com/Kishor-git22/ai-summarizer-app'
 
 // Hero Section
-const HERO_TITLE_LEFT = 'Summarize your Article with our Summarizer'
+const HERO_TITLE_LEFT = 'Summarize your Article with our AI Summarizer'
 const HERO_TITLE_RIGHT = ''
 const HERO_SUBTITLE_LEFT = 'Turn long articles into short, easy-to-read summaries with'
 const HERO_SUBTITLE_RIGHT = 'clear, quick, and open-source.'
