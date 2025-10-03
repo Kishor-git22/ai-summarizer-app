@@ -126,7 +126,9 @@ describe('Demo Component', () => {
       toast.success = mockToastSuccess
 
       const { useLazyGetSummaryQuery } = await import('../../services/article')
-      const mockGetSummary = vi.fn().mockResolvedValue({ data: { summary: 'This is a test summary.' } })
+      const mockGetSummary = vi
+        .fn()
+        .mockResolvedValue({ data: { summary: 'This is a test summary.' } })
       useLazyGetSummaryQuery.mockReturnValue([
         mockGetSummary,
         { isFetching: false, data: { summary: 'This is a test summary.' }, error: null }
@@ -179,7 +181,10 @@ describe('Demo Component', () => {
 
     test('clicking on an article loads its summary', async () => {
       const { useLazyGetSummaryQuery } = await import('../../services/article')
-      useLazyGetSummaryQuery.mockReturnValue([vi.fn(), { isFetching: false, data: null, error: null }])
+      useLazyGetSummaryQuery.mockReturnValue([
+        vi.fn(),
+        { isFetching: false, data: null, error: null }
+      ])
 
       render(<Demo />)
       const user = userEvent.setup()
@@ -204,7 +209,10 @@ describe('Demo Component', () => {
 
     test('copies article URL and updates UI', async () => {
       const { useLazyGetSummaryQuery } = await import('../../services/article')
-      useLazyGetSummaryQuery.mockReturnValue([vi.fn(), { isFetching: false, data: null, error: null }])
+      useLazyGetSummaryQuery.mockReturnValue([
+        vi.fn(),
+        { isFetching: false, data: null, error: null }
+      ])
 
       render(<Demo />)
       const user = userEvent.setup()
