@@ -60,7 +60,3 @@ jobs:
     # Run test coverage
       - name: Run test coverage
         run: npm run test:coverage
-
-    # Deploy to production
-      - name: Deploy to production
-        run: npm run deploy -- --yes
