@@ -4,7 +4,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import Hero from '../../components/Hero'
 // Mock constants
-const PROJECT_NAME = 'Summarizer'
+const PROJECT_NAME = 'AI Summarizer'
 const PROJECT_GITHUB_LINK = 'https://github.com/Kishor-git22/ai-summarizer-app'
 const HERO_TITLE_LEFT = 'Summarize your Article with our'
 const HERO_TITLE_RIGHT = 'Summarizer'
