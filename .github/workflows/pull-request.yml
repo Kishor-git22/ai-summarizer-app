@@ -63,4 +63,4 @@ jobs:
 
     # Deploy to production
       - name: Deploy to production
-        run: npm run deploy
+        run: npm run deploy -- --yes
