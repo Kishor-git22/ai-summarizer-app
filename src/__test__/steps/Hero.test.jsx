@@ -7,7 +7,7 @@ import Hero from '../../components/Hero'
 const PROJECT_NAME = 'AI Summarizer'
 const PROJECT_GITHUB_LINK = 'https://github.com/Kishor-git22/ai-summarizer-app'
 const HERO_TITLE_LEFT = 'Summarize your Article with our'
-const HERO_TITLE_RIGHT = 'Summarizer'
+const HERO_TITLE_RIGHT = PROJECT_NAME
 const HERO_SUBTITLE_LEFT = 'Turn long articles into short, easy-to-read summaries with'
 const HERO_SUBTITLE_RIGHT = 'clear, quick, and open-source.'
 
