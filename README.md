@@ -3,6 +3,7 @@
 A powerful web application that leverAGES AI to generate concise and accurate summaries of text content. Perfect for students, researchers, and professionals who need to quickly understand long documents, articles, or research papers.
 
 ## Table of Contents
+
 - [Introduction](#introduction)
 - [Tech Stack](#tech-stack)
 - [Features](#features)
@@ -18,6 +19,7 @@ AI Summarizer is designed to help users quickly extract key information from lar
 ## Tech Stack
 
 ### Frontend
+
 - **React 19** - For building interactive user interfaces
 - **Redux Toolkit** - For state management
 - **React Toastify** - For user notifications
@@ -26,6 +28,7 @@ AI Summarizer is designed to help users quickly extract key information from lar
 - **MSW (Mock Service Worker)** - For API mocking in development and testing
 
 ### Development Tools
+
 - **Vitest** - Fast testing framework
 - **Cucumber** - For Behavior-Driven Development (BDD) testing
 - **ESLint** - For code quality and best practices
@@ -34,6 +37,7 @@ AI Summarizer is designed to help users quickly extract key information from lar
 - **Vercel** - For deployment and hosting
 
 ### Testing Stack
+
 - **Vitest** - Unit and integration testing
 - **Testing Library** - For component testing
 - **Cucumber** - For BDD-style acceptance tests
@@ -56,12 +60,14 @@ AI Summarizer is designed to help users quickly extract key information from lar
    - OpenAI API key
 
 2. **Clone the repository**
+
    ```bash
    git clone https://github.com/your-username/ai-summarizer-app.git
    cd ai-summarizer-app
    ```
 
 3. **Install dependencies**
+
    ```bash
    npm install
    # or
@@ -70,6 +76,7 @@ AI Summarizer is designed to help users quickly extract key information from lar
 
 4. **Set up environment variables**
    Create a `.env` file in the root directory and add:
+
    ```
    VITE_OPENAI_API_KEY=your_openai_api_key
    ```
@@ -105,16 +112,19 @@ AI Summarizer is designed to help users quickly extract key information from lar
 ## Development
 
 - **Run development server**:
+
   ```bash
   npm run dev
   ```
 
 - **Run tests**:
+
   ```bash
   npm test
   ```
 
 - **Run tests with coverage**:
+
   ```bash
   npm run test:coverage
   ```
@@ -152,6 +162,7 @@ npm run build
 ## Testing
 
 The project uses Vitest for testing with the following structure:
+
 - `__test__/features/` - Feature test files
 - `__test__/steps/` - Step definitions for BDD-style tests
 - `__mocks__/` - Mock data and modules for testing
